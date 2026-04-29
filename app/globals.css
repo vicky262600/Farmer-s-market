@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-stall-active: var(--stall-active);
+  --color-stall-active-foreground: var(--stall-active-foreground);
+  --color-stall-deal: var(--stall-deal);
+  --color-stall-deal-foreground: var(--stall-deal-foreground);
+  --color-stall-empty: var(--stall-empty);
+  --color-stall-empty-foreground: var(--stall-empty-foreground);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --font-sans: var(--font-sans-body), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+  --font-display: var(--font-display-family), ui-serif, Georgia, serif;
+  --shadow-soft: 0 2px 12px -2px oklch(0.35 0.04 55 / 0.08);
+  --shadow-card: 0 8px 32px -8px oklch(0.35 0.04 55 / 0.1);
+  --shadow-lift: 0 16px 40px -12px oklch(0.4 0.06 130 / 0.14);
 }
 
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  max-width: 80rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Light: cream, sand, sage — minimal & local */
+:root {
+  --background: oklch(0.97 0.012 88);
+  --foreground: oklch(0.3 0.035 58);
+  --card: oklch(0.995 0.006 92);
+  --card-foreground: oklch(0.3 0.035 58);
+  --popover: oklch(0.995 0.006 92);
+  --popover-foreground: oklch(0.3 0.035 58);
+  --primary: oklch(0.46 0.07 142);
+  --primary-foreground: oklch(0.98 0.01 95);
+  --secondary: oklch(0.93 0.022 86);
+  --secondary-foreground: oklch(0.32 0.04 58);
+  --muted: oklch(0.92 0.018 88);
+  --muted-foreground: oklch(0.46 0.03 72);
+  --accent: oklch(0.82 0.1 78);
+  --accent-foreground: oklch(0.3 0.045 55);
+  --destructive: oklch(0.52 0.14 28);
+  --destructive-foreground: oklch(0.98 0.01 95);
+  --border: oklch(0.88 0.02 86);
+  --input: oklch(0.9 0.018 88);
+  --ring: oklch(0.5 0.06 138);
+  --radius: 1rem;
+  --stall-active: oklch(0.52 0.055 138);
+  --stall-active-foreground: oklch(0.98 0.01 96);
+  --stall-deal: oklch(0.76 0.1 62);
+  --stall-deal-foreground: oklch(0.28 0.04 48);
+  --stall-empty: oklch(0.9 0.012 86);
+  --stall-empty-foreground: oklch(0.52 0.025 75);
+}
+
+/* Dark: warm soil & night garden — still earthy, not corporate slate */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: oklch(0.24 0.028 58);
+    --foreground: oklch(0.95 0.02 92);
+    --card: oklch(0.28 0.03 62);
+    --card-foreground: oklch(0.95 0.02 92);
+    --popover: oklch(0.28 0.03 62);
+    --popover-foreground: oklch(0.95 0.02 92);
+    --primary: oklch(0.62 0.075 138);
+    --primary-foreground: oklch(0.2 0.03 58);
+    --secondary: oklch(0.34 0.03 65);
+    --secondary-foreground: oklch(0.93 0.02 92);
+    --muted: oklch(0.32 0.028 62);
+    --muted-foreground: oklch(0.72 0.03 88);
+    --accent: oklch(0.72 0.1 72);
+    --accent-foreground: oklch(0.22 0.04 55);
+    --destructive: oklch(0.5 0.14 28);
+    --destructive-foreground: oklch(0.98 0.01 95);
+    --border: oklch(0.36 0.03 62);
+    --input: oklch(0.34 0.028 62);
+    --ring: oklch(0.58 0.07 138);
+    --stall-active: oklch(0.44 0.05 138);
+    --stall-active-foreground: oklch(0.96 0.02 95);
+    --stall-deal: oklch(0.58 0.09 58);
+    --stall-deal-foreground: oklch(0.97 0.02 92);
+    --stall-empty: oklch(0.32 0.02 62);
+    --stall-empty-foreground: oklch(0.65 0.02 85);
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.6;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.transition-smooth {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow,
+    transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-duration: 220ms;
+}
+
+.transition-bounce {
+  transition-property: transform, box-shadow;
+  transition-timing-function: cubic-bezier(0.34, 1.2, 0.64, 1);
+  transition-duration: 320ms;
+}
+
+.bg-gradient-leaf {
+  background-image: linear-gradient(145deg, oklch(0.44 0.07 138), oklch(0.38 0.06 152));
+}
+
+.bg-gradient-hero {
+  background-image: linear-gradient(to top, oklch(0.22 0.04 55 / 0.72), oklch(0.4 0.05 75 / 0.22));
 }
