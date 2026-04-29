@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { stalls, categories, type Stall } from "@/data/market";
+import { stallMatchesVendorSearch } from "@/lib/vendor-search";
 import { StallModal } from "./StallModal";
 import { cn } from "@/lib/utils";
 
@@ -20,12 +21,7 @@ export const MarketMap = () => {
 
   const filtered = useMemo((): StallWithDim[] => {
     return stalls.map((s) => {
-      const q = query.trim().toLowerCase();
-      const matchesQuery =
-        !q ||
-        s.vendor?.toLowerCase().includes(q) ||
-        s.brand?.toLowerCase().includes(q) ||
-        s.sells?.some((p) => p.toLowerCase().includes(q));
+      const matchesQuery = !query.trim() || stallMatchesVendorSearch(s, query);
 
       const matchesCategory =
         activeFilters.filter((f) => f !== "Deals only").length === 0 ||
