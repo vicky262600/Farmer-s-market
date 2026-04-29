@@ -19,18 +19,22 @@ export const Hero = () => (
       <div className="absolute inset-0 bg-gradient-hero" />
     </div>
 
-    <div className="relative container py-24 md:py-36 max-w-3xl text-primary-foreground animate-fade-in-up">
-      <span className="inline-flex items-center gap-2 rounded-full bg-background/15 backdrop-blur px-4 py-1.5 text-sm font-medium border border-primary-foreground/20">
+    <div className="relative container py-24 md:py-36 max-w-3xl text-[oklch(0.98_0.01_95)] animate-fade-in-up">
+      <span className="inline-flex items-center gap-2 rounded-full bg-black/20 backdrop-blur px-4 py-1.5 text-sm font-medium border border-white/25">
         <Leaf className="h-4 w-4" /> Open every Saturday & Wednesday
       </span>
       <h1 className="mt-5 font-display text-4xl md:text-6xl font-semibold leading-[1.05]">
-        Welcome to your <em className="not-italic text-accent">local</em> farmer&apos;s market
+        Welcome to your <em className="not-italic text-[oklch(0.82_0.1_78)]">local</em> farmer&apos;s market
       </h1>
-      <p className="mt-5 text-lg md:text-xl text-primary-foreground/90 max-w-xl">
+      <p className="mt-5 text-lg md:text-xl text-[oklch(0.98_0.01_95_/_0.9)] max-w-xl">
         Find fresh produce, meet local vendors, and discover today&apos;s best deals — all under one open sky.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
-        <Button asChild size="lg" className="rounded-full bg-accent text-accent-foreground hover:bg-accent/90 shadow-lift">
+        <Button
+          asChild
+          size="lg"
+          className="rounded-full bg-[oklch(0.82_0.1_78)] text-[oklch(0.3_0.045_55)] hover:bg-[oklch(0.82_0.1_78_/_0.9)] shadow-lift"
+        >
           <Link href="/vendors">
             Explore vendors <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
@@ -39,7 +43,7 @@ export const Hero = () => (
           asChild
           size="lg"
           variant="outline"
-          className="rounded-full bg-background/10 border-primary-foreground/40 text-primary-foreground hover:bg-background/20 hover:text-primary-foreground"
+          className="rounded-full border-white/40 bg-white/10 text-[oklch(0.98_0.01_95)] hover:bg-white/20 hover:text-[oklch(0.98_0.01_95)]"
         >
           <Link href="/deals">View today&apos;s deals</Link>
         </Button>

@@ -213,6 +213,8 @@ function FloorStall({ stall, onSelect }: { stall: Stall; onSelect: () => void })
   const empty = stall.status === "empty";
   const deal = stall.status === "deal";
   const title = stall.brand ?? stall.vendor ?? "Available";
+  /** Headline is the owner only when there is no separate trading name */
+  const titleIsOwnerOnly = Boolean(stall.vendor && !stall.brand);
   const sellsLine = stall.sells?.slice(0, 4).join(" · ") ?? "";
 
   return (
@@ -235,9 +237,16 @@ function FloorStall({ stall, onSelect }: { stall: Stall; onSelect: () => void })
         )}
       </div>
       <div className="mt-0.5 min-w-0 flex-1">
-        <div className="font-display text-[0.8rem] font-semibold leading-tight tracking-tight sm:text-sm">{title}</div>
+        <div
+          className={cn(
+            "font-display text-[0.8rem] font-semibold leading-tight tracking-tight sm:text-sm",
+            titleIsOwnerOnly && "italic",
+          )}
+        >
+          {title}
+        </div>
         {stall.vendor && stall.brand && stall.brand !== stall.vendor && (
-          <div className="mt-0.5 line-clamp-1 text-[0.68rem] opacity-85 sm:text-xs">{stall.vendor}</div>
+          <div className="mt-0.5 line-clamp-1 text-[0.68rem] italic opacity-85 sm:text-xs">{stall.vendor}</div>
         )}
         {sellsLine && (
           <div className="mt-1 line-clamp-2 text-[0.66rem] opacity-90 leading-snug sm:text-[0.74rem]">{sellsLine}</div>

@@ -113,6 +113,8 @@ const StallTile = ({ stall, dim, onClick }: { stall: StallWithDim; dim: boolean;
   const isEmpty = stall.status === "empty";
   const isDeal = stall.status === "deal";
   const isActive = stall.status === "active";
+  const title = stall.brand ?? stall.vendor ?? "Available";
+  const titleIsOwnerOnly = Boolean(stall.vendor && !stall.brand);
 
   return (
     <button
@@ -131,9 +133,17 @@ const StallTile = ({ stall, dim, onClick }: { stall: StallWithDim; dim: boolean;
         {isDeal && <Badge className="bg-background/30 text-current border-0 backdrop-blur">Deal</Badge>}
       </div>
       <div>
-        <div className="font-display text-base md:text-lg font-semibold leading-tight line-clamp-2">
-          {stall.brand ?? stall.vendor ?? "Available"}
+        <div
+          className={cn(
+            "font-display text-base md:text-lg font-semibold leading-tight line-clamp-2",
+            titleIsOwnerOnly && "italic",
+          )}
+        >
+          {title}
         </div>
+        {stall.vendor && stall.brand && stall.brand !== stall.vendor && (
+          <div className="mt-0.5 line-clamp-1 text-xs italic opacity-90">{stall.vendor}</div>
+        )}
         {stall.category && (
           <div className="mt-1 text-xs opacity-80 line-clamp-1">{stall.category}</div>
         )}

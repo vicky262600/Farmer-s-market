@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Tag } from "lucide-react";
 import type { Stall } from "@/data/market";
+import { cn } from "@/lib/utils";
 
 export const StallModal = ({ stall, onClose }: { stall: Stall | null; onClose: () => void }) => (
   <Dialog open={!!stall} onOpenChange={(o) => !o && onClose()}>
@@ -19,11 +20,18 @@ export const StallModal = ({ stall, onClose }: { stall: Stall | null; onClose: (
                 </Badge>
               )}
             </div>
-            <DialogTitle className="font-display text-2xl">
+            <DialogTitle
+              className={cn(
+                "font-display text-2xl",
+                stall.vendor && !stall.brand && "italic",
+              )}
+            >
               {stall.brand ?? stall.vendor ?? "Available stall"}
             </DialogTitle>
             {stall.vendor && stall.brand && stall.brand !== stall.vendor && (
-              <p className="text-sm text-muted-foreground">Run by {stall.vendor}</p>
+              <p className="text-sm text-muted-foreground">
+                Run by <span className="italic text-foreground/80">{stall.vendor}</span>
+              </p>
             )}
             <DialogDescription className="text-base text-foreground/70">
               {stall.description}
