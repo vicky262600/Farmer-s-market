@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,10 +17,63 @@ const BASE_CELL_REM = 8.4;
 const AISLE_TILE_CLASS =
   "relative z-0 min-h-0 h-full w-full rounded-none bg-[oklch(0.86_0.028_88)]";
 
+function pinchDistance(touches: TouchList) {
+  const a = touches[0];
+  const b = touches[1];
+  return Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+}
+
+function clampZoom(value: number) {
+  return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Number(value.toFixed(3))));
+}
+
 export function FloorMap() {
   const [zoom, setZoom] = useState(1);
   const [selected, setSelected] = useState<Stall | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
+
+  const pinchRef = useRef<{ d0: number; z0: number } | null>(null);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        pinchRef.current = { d0: pinchDistance(e.touches), z0: zoomRef.current };
+      }
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && pinchRef.current) {
+        e.preventDefault();
+        const { d0, z0 } = pinchRef.current;
+        const d = pinchDistance(e.touches);
+        if (d0 < 1) return;
+        setZoom(clampZoom(z0 * (d / d0)));
+      }
+    };
+
+    const onTouchEndOrCancel = (e: TouchEvent) => {
+      if (e.touches.length < 2) {
+        pinchRef.current = null;
+      }
+    };
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEndOrCancel, { passive: true });
+    el.addEventListener("touchcancel", onTouchEndOrCancel, { passive: true });
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEndOrCancel);
+      el.removeEventListener("touchcancel", onTouchEndOrCancel);
+    };
+  }, []);
 
   const byCell = useMemo(() => {
     const m = new Map<string, Stall>();
@@ -61,7 +114,7 @@ export function FloorMap() {
           <h2 className="font-display text-3xl md:text-4xl font-semibold">Market map</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-base">
             L-shaped aisle with vendors on both sides — tap a stall for the operator, sign name, and what they sell.
-            Zoom to fit your screen.
+            Pinch with two fingers on the map to zoom (or use the buttons).
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
@@ -93,7 +146,7 @@ export function FloorMap() {
 
       <div
         ref={viewportRef}
-        className="mt-8 max-h-[min(78vh,880px)] overflow-auto rounded-3xl border border-border/80 bg-[oklch(0.93_0.02_88/0.5)] p-3 shadow-card md:p-5 touch-pan-x touch-pan-y"
+        className="mt-8 max-h-[min(78vh,880px)] overflow-auto rounded-3xl border border-border/80 bg-background/80 p-3 shadow-card md:p-5 touch-pan-x touch-pan-y"
       >
         <div
           className="mx-auto inline-grid origin-top-left gap-0"
@@ -127,7 +180,7 @@ export function FloorMap() {
               return (
                 <div
                   key={`plaza-${row}-${col}`}
-                  className="m-0.5 min-h-[2rem] rounded-md border border-dashed border-border/20 bg-background/20"
+                  className="m-0.5 min-h-[2rem] rounded-md border-0 bg-transparent"
                   aria-hidden
                 />
               );
@@ -167,12 +220,12 @@ function FloorStall({ stall, onSelect }: { stall: Stall; onSelect: () => void })
       type="button"
       onClick={onSelect}
       className={cn(
-        "flex h-full min-h-0 w-full min-w-0 flex-col rounded-xl border p-1.5 text-left transition-smooth sm:p-2",
+        "flex h-full min-h-0 w-full min-w-0 flex-col rounded-xl border-0 p-1.5 text-left outline-none ring-0 transition-smooth focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-2",
         !empty &&
           !deal &&
-          "border-transparent bg-stall-active text-stall-active-foreground shadow-soft hover:-translate-y-0.5 hover:shadow-lift",
-        deal && "border-transparent bg-stall-deal text-stall-deal-foreground shadow-soft hover:-translate-y-0.5 hover:shadow-lift",
-        empty && "cursor-pointer border-dashed border-border bg-stall-empty/50 text-stall-empty-foreground hover:bg-stall-empty/70",
+          "bg-stall-active text-stall-active-foreground shadow-none hover:-translate-y-0.5 hover:shadow-none",
+        deal && "bg-stall-deal text-stall-deal-foreground shadow-none hover:-translate-y-0.5 hover:shadow-none",
+        empty && "cursor-pointer bg-stall-empty/50 text-stall-empty-foreground hover:bg-stall-empty/70",
       )}
     >
       <div className="flex items-start justify-between gap-0.5">
