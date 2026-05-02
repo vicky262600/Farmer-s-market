@@ -34,7 +34,7 @@ export default function ManagerLoginPage() {
       <header className="border-b border-border/60 bg-background/90 px-4 py-4">
         <div className="container flex items-center justify-between">
           <Link href="/" className="font-display text-lg font-semibold hover:opacity-80">
-            Farmer&apos;s Market
+            SVFM
           </Link>
           <Button asChild variant="ghost" size="sm" className="rounded-full">
             <Link href="/">Back to site</Link>

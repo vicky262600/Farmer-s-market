@@ -21,7 +21,7 @@ export const Hero = () => (
 
     <div className="relative container py-24 md:py-36 max-w-3xl text-[oklch(0.98_0.01_95)] animate-fade-in-up">
       <span className="inline-flex items-center gap-2 rounded-full bg-black/20 backdrop-blur px-4 py-1.5 text-sm font-medium border border-white/25">
-        <Leaf className="h-4 w-4" /> Open every Saturday & Wednesday
+        <Leaf className="h-4 w-4" /> Open Saturdays · 9am–2pm
       </span>
       <h1 className="mt-5 font-display text-4xl md:text-6xl font-semibold leading-[1.05]">
         Welcome to your <em className="not-italic text-[oklch(0.82_0.1_78)]">local</em> farmer&apos;s market

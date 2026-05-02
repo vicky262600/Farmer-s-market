@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Sprout, Menu, X, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { createContext, Suspense, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -134,14 +135,19 @@ function NavbarSearchInput({ className }: { className?: string }) {
   const ctx = useContext(NavSearchContext);
   if (!ctx) return null;
   return (
-    <div className={cn("relative w-full min-w-0 md:max-w-[220px] lg:max-w-xs", className)}>
+    <div
+      className={cn(
+        "relative min-w-0 w-full max-w-[9rem] shrink-0 sm:max-w-[10rem] md:w-auto md:max-w-[168px] md:flex-initial lg:max-w-[180px]",
+        className,
+      )}
+    >
       <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
         value={ctx.value}
         onChange={(e) => ctx.onChange(e.target.value)}
         onKeyDown={ctx.onKeyDown}
-        placeholder="Search vendors, products, stall #…"
+        placeholder="Search…"
         className="h-9 rounded-full border-border/80 bg-muted/40 pl-9 pr-3 text-sm"
         aria-label="Search vendors"
       />
@@ -158,11 +164,11 @@ function NavbarSearch(props: {
   return (
     <Suspense
       fallback={
-        <div className="relative w-full min-w-0 md:max-w-[220px] lg:max-w-xs">
+        <div className="relative min-w-0 w-full max-w-[9rem] shrink-0 sm:max-w-[10rem] md:w-auto md:max-w-[168px] md:flex-initial lg:max-w-[180px]">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             disabled
-            placeholder="Search vendors…"
+            placeholder="Search…"
             className="h-9 rounded-full border-border/80 bg-muted/40 pl-9 pr-3 text-sm"
             aria-label="Search vendors"
           />
@@ -188,18 +194,31 @@ export const Navbar = () => {
   return (
     <NavbarSearch searchDraft={searchDraft} setSearchDraft={setSearchDraft} onNavigate={() => setOpen(false)}>
       <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-lg">
-        <div className="container flex h-16 flex-wrap items-center gap-3 md:flex-nowrap md:justify-between">
-          <div className="flex min-w-0 flex-1 items-center gap-3 md:flex-none md:gap-4">
-            <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 group" onClick={() => setOpen(false)}>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-leaf shadow-soft transition-bounce group-hover:scale-105">
-                <Sprout className="h-5 w-5 text-primary-foreground" />
-              </span>
-              <span className="font-display truncate text-xl font-semibold text-foreground">Farmer&apos;s Market</span>
-            </Link>
-            <NavbarSearchInput className="hidden min-w-0 flex-1 md:block md:max-w-none" />
+        <div className="container flex h-16 items-center gap-2 md:gap-3">
+          <Link
+            href="/"
+            className="flex min-w-0 shrink-0 items-center gap-2.5 group"
+            onClick={() => setOpen(false)}
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/70 bg-card shadow-soft ring-1 ring-black/[0.04] transition-transform group-hover:scale-105 sm:h-10 sm:w-10">
+              <Image
+                src="/logo.png"
+                alt=""
+                width={160}
+                height={160}
+                className="h-full w-full origin-center scale-[1.2] object-contain"
+                sizes="40px"
+                priority
+              />
+            </span>
+            <span className="font-display truncate text-lg font-semibold text-foreground sm:text-xl">SVFM</span>
+          </Link>
+
+          <div className="flex min-w-0 flex-1 items-center justify-end gap-2 md:flex-initial md:justify-start md:gap-4">
+            <NavbarSearchInput />
           </div>
 
-          <nav className="hidden md:flex shrink-0 items-center gap-1">
+          <nav className="hidden shrink-0 items-center gap-1 md:flex md:ml-auto">
             {links.map((l) => {
               const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
               return (
@@ -221,9 +240,11 @@ export const Navbar = () => {
           </nav>
 
           <button
-            className="ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-muted transition-smooth md:hidden"
+            type="button"
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full hover:bg-muted transition-smooth md:hidden"
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle menu"
+            aria-expanded={open}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -231,29 +252,26 @@ export const Navbar = () => {
 
         {open && (
           <div className="md:hidden border-t border-border/60 bg-background animate-fade-in-up">
-            <div className="container flex flex-col gap-3 py-4">
-              <NavbarSearchInput />
-              <div className="flex flex-col gap-1">
-                {links.map((l) => {
-                  const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
-                  return (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "px-4 py-3 rounded-xl text-sm font-medium transition-smooth",
-                        active ? "bg-secondary text-secondary-foreground" : "text-foreground/80 hover:bg-muted",
-                      )}
-                    >
-                      {l.label}
-                    </Link>
-                  );
-                })}
-                <Button asChild className="mt-2 rounded-full" onClick={() => setOpen(false)}>
-                  <Link href="/manager/login">Manager Login</Link>
-                </Button>
-              </div>
+            <div className="container flex flex-col gap-1 py-4">
+              {links.map((l) => {
+                const active = l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
+                return (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "px-4 py-3 rounded-xl text-sm font-medium transition-smooth",
+                      active ? "bg-secondary text-secondary-foreground" : "text-foreground/80 hover:bg-muted",
+                    )}
+                  >
+                    {l.label}
+                  </Link>
+                );
+              })}
+              <Button asChild className="mt-2 rounded-full" onClick={() => setOpen(false)}>
+                <Link href="/manager/login">Manager Login</Link>
+              </Button>
             </div>
           </div>
         )}

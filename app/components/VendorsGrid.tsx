@@ -9,7 +9,7 @@ import {
 } from "@/lib/vendor-search";
 import { useMergedStalls } from "@/hooks/use-merged-market";
 
-export function VendorsGrid({ query: q }: { query: string }) {
+export function VendorsGrid({ query: q = "" }: { query?: string }) {
   const stalls = useMergedStalls();
 
   const { vendors, usedFuzzyFallback, suggestion } = useMemo(() => {

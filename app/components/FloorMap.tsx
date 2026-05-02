@@ -143,7 +143,11 @@ export function FloorMap() {
   }, [zoom]);
 
   return (
-    <section id="market-map" className="container py-16 md:py-20">
+    <section
+      id="market-map"
+      className="border-b border-border/60 bg-muted py-16 pb-10 md:py-20 md:pb-12"
+    >
+      <div className="container">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="font-display text-3xl md:text-4xl font-semibold">Market map</h2>
@@ -199,7 +203,7 @@ export function FloorMap() {
               const stall = byCell.get(`${row}-${col}`);
               if (stall) {
                 return (
-                  <div key={stall.id} className="flex min-h-0 min-w-0 p-0.5">
+                  <div key={stall.id} className="flex min-h-0 min-w-0 p-px">
                     <FloorStall stall={stall} onSelect={() => setSelected(stall)} />
                   </div>
                 );
@@ -226,7 +230,7 @@ export function FloorMap() {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-4 text-xs text-muted-foreground md:text-sm">
+      <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted-foreground md:mt-4 md:gap-4 md:text-sm">
         <span className="inline-flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-sm bg-stall-active" /> Open vendor
         </span>
@@ -242,6 +246,7 @@ export function FloorMap() {
       </div>
 
       <StallModal stall={selected} onClose={() => setSelected(null)} />
+      </div>
     </section>
   );
 }
@@ -268,25 +273,27 @@ function FloorStall({ stall, onSelect }: { stall: Stall; onSelect: () => void })
       )}
     >
       <div className="flex items-start justify-between gap-0.5">
-        <span className="font-mono text-[0.68rem] font-semibold opacity-80 sm:text-xs">#{stall.id}</span>
+        <span className="font-mono text-[0.9375rem] font-semibold leading-none opacity-80 sm:text-base">#{stall.id}</span>
         {deal && !empty && (
-          <Badge className="h-4 shrink-0 border-0 bg-background/25 px-1.5 text-[0.62rem] text-current">Deal</Badge>
+          <Badge className="flex h-[1.125rem] shrink-0 items-center border-0 bg-background/25 px-1.5 text-[0.65rem] leading-none text-current sm:h-5 sm:px-2 sm:text-xs">
+            Deal
+          </Badge>
         )}
       </div>
       <div className="mt-0.5 min-w-0 flex-1">
         <div
           className={cn(
-            "font-display text-[0.8rem] font-semibold leading-tight tracking-tight sm:text-sm",
+            "font-display text-lg font-semibold leading-tight tracking-tight line-clamp-2 sm:text-xl",
             titleIsOwnerOnly && "italic",
           )}
         >
           {title}
         </div>
         {stall.vendor && stall.brand && stall.brand !== stall.vendor && (
-          <div className="mt-0.5 line-clamp-1 text-[0.68rem] italic opacity-85 sm:text-xs">{stall.vendor}</div>
+          <div className="mt-0.5 line-clamp-1 text-base italic leading-tight opacity-85 sm:text-lg">{stall.vendor}</div>
         )}
         {sellsLine && (
-          <div className="mt-1 line-clamp-2 text-[0.66rem] opacity-90 leading-snug sm:text-[0.74rem]">{sellsLine}</div>
+          <div className="mt-0.5 line-clamp-2 text-base leading-tight opacity-90 sm:text-lg">{sellsLine}</div>
         )}
       </div>
     </button>

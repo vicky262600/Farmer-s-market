@@ -17,7 +17,7 @@ const display = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Farmer's Market",
+  title: "SVFM",
   description: "Local growers, makers, and today's deals.",
 };
 

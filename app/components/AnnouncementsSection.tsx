@@ -6,7 +6,8 @@ import { useMergedAnnouncements } from "@/hooks/use-merged-market";
 export const AnnouncementsSection = () => {
   const announcements = useMergedAnnouncements();
   return (
-    <section className="container py-20">
+    <section className="border-b border-border/60 bg-background py-20">
+      <div className="container">
       <div className="max-w-2xl mb-8">
         <h2 className="font-display text-3xl md:text-4xl font-semibold">What&apos;s happening</h2>
         <p className="mt-2 text-muted-foreground">Live music, tastings, workshops — there&apos;s always something on.</p>
@@ -25,6 +26,7 @@ export const AnnouncementsSection = () => {
             <p className="mt-2 text-muted-foreground leading-relaxed">{a.body}</p>
           </article>
         ))}
+      </div>
       </div>
     </section>
   );
