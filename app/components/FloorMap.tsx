@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +37,39 @@ export function FloorMap() {
   zoomRef.current = zoom;
 
   const pinchRef = useRef<{ d0: number; z0: number } | null>(null);
+
+  const centerHorizontalScroll = useCallback(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    if (max <= 0) {
+      el.scrollLeft = 0;
+      return;
+    }
+    el.scrollLeft = max / 2;
+  }, []);
+
+  useLayoutEffect(() => {
+    centerHorizontalScroll();
+    const id = requestAnimationFrame(() => centerHorizontalScroll());
+    return () => cancelAnimationFrame(id);
+  }, [centerHorizontalScroll, stalls]);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => centerHorizontalScroll());
+    ro.observe(el);
+    const inner = el.firstElementChild;
+    if (inner) ro.observe(inner);
+    return () => ro.disconnect();
+  }, [centerHorizontalScroll]);
+
+  useEffect(() => {
+    const onResize = () => centerHorizontalScroll();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [centerHorizontalScroll]);
 
   useEffect(() => {
     const el = viewportRef.current;
@@ -150,8 +183,9 @@ export function FloorMap() {
         ref={viewportRef}
         className="mt-8 max-h-[min(78vh,880px)] overflow-auto rounded-3xl border border-border/80 bg-background/80 p-3 shadow-card md:p-5 touch-pan-x touch-pan-y"
       >
+        <div className="flex w-max min-w-full justify-center">
         <div
-          className="mx-auto inline-grid origin-top-left gap-0"
+          className="inline-grid origin-top-left gap-0"
           style={{
             transform: `scale(${zoom})`,
             gridTemplateRows: `repeat(${MARKET_GRID.rows}, minmax(${BASE_CELL_REM}rem, auto))`,
@@ -188,6 +222,7 @@ export function FloorMap() {
               );
             }),
           ).flat()}
+        </div>
         </div>
       </div>
 
