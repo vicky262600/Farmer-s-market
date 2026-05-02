@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { stalls, MARKET_GRID, isAisleCell, type Stall } from "@/data/market";
+import { MARKET_GRID, isAisleCell, type Stall } from "@/data/market";
+import { useMergedStalls } from "@/hooks/use-merged-market";
 import { StallModal } from "@/components/StallModal";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ function clampZoom(value: number) {
 }
 
 export function FloorMap() {
+  const stalls = useMergedStalls();
   const [zoom, setZoom] = useState(1);
   const [selected, setSelected] = useState<Stall | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
@@ -79,7 +81,7 @@ export function FloorMap() {
     const m = new Map<string, Stall>();
     stalls.forEach((s) => m.set(`${s.mapRow}-${s.mapCol}`, s));
     return m;
-  }, []);
+  }, [stalls]);
 
   const changeZoom = useCallback((direction: 1 | -1) => {
     const viewport = viewportRef.current;

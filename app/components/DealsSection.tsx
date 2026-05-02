@@ -1,8 +1,11 @@
-import { stalls } from "@/data/market";
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
+import { useMergedStalls } from "@/hooks/use-merged-market";
 
 export const DealsSection = () => {
+  const stalls = useMergedStalls();
   const deals = stalls.filter((s) => s.status === "deal" && s.highlights?.length);
   return (
     <section id="deals" className="bg-secondary/40 py-20">

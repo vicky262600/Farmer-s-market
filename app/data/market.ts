@@ -97,7 +97,9 @@ export const stalls: Stall[] = STALL_SLOTS.map((cell, i) => {
   };
 });
 
-export const announcements = [
+export type Announcement = { id: number; title: string; time: string; body: string };
+
+export const announcements: Announcement[] = [
   { id: 1, title: "Live folk music in the courtyard", time: "Today · 2:00 PM", body: "Local trio Whistle & Pine performs by the central oak." },
   { id: 2, title: "Free apple tasting at Stall 2", time: "Today · 11:00 AM", body: "Try 6 heirloom varieties from Sunny Orchard." },
   { id: 3, title: "Kids' planting workshop", time: "Saturday · 10:00 AM", body: "Free seedlings for every child. Sign up at the info desk." },

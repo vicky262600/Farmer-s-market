@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { stalls, categories, type Stall } from "@/data/market";
+import { categories, type Stall } from "@/data/market";
+import { useMergedStalls } from "@/hooks/use-merged-market";
 import { stallMatchesVendorSearch } from "@/lib/vendor-search";
 import { StallModal } from "./StallModal";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 type StallWithDim = Stall & { dim: boolean };
 
 export const MarketMap = () => {
+  const stalls = useMergedStalls();
   const [query, setQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [selected, setSelected] = useState<Stall | null>(null);
@@ -32,7 +34,7 @@ export const MarketMap = () => {
       const visible = matchesQuery && matchesCategory && matchesDeals && s.vendor !== null;
       return { ...s, dim: !visible && s.status !== "empty" };
     });
-  }, [query, activeFilters]);
+  }, [stalls, query, activeFilters]);
 
   const allFilters = [...categories, "Deals only"];
 
